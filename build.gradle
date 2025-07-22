@@ -12,11 +12,20 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+	mavenCentral()
+
+	maven {
+		url = uri("https://maven.imyvm.org")
+	}
+
+	maven {
+		url = "https://maven.pkg.github.com/ImyvmCircle/HoKi"
+		credentials {
+			username = System.getenv("GITHUB_USERNAME")
+			password = System.getenv("GITHUB_TOKEN")
+		}
+	}
+
 	maven {
 		name = 'Fabric'
 		url = 'https://maven.fabricmc.net/'
@@ -33,6 +42,9 @@ loom {
 		}
 	}
 
+	runConfigs.configureEach {
+		runDir = "run"
+	}
 }
 
 dependencies {
@@ -44,6 +56,11 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+	implementation("com.typesafe:config:${project.typesafe_version}")
+
+	//ImyvmCircle Projects.
+	modImplementation("com.imyvm:imyvm-hoki:${project.imyvm_hoki_version}")
 }
 
 processResources {

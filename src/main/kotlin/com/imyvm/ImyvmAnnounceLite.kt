@@ -1,5 +1,6 @@
 package com.imyvm
 
+import com.imyvm.broadcast.BroadcastConfig.Companion.INTERVAL_SECONDS
 import com.imyvm.broadcast.BroadcastScheduler
 import com.imyvm.commands.register
 import net.fabricmc.api.ModInitializer
@@ -15,7 +16,7 @@ object ImyvmAnnounceLite : ModInitializer {
 			register(dispatcher, commandRegistryAccess)
 		}
 		ServerLifecycleEvents.SERVER_STARTED.register { server ->
-			BroadcastScheduler.start(server, 300L)
+			BroadcastScheduler.start(server, INTERVAL_SECONDS.value)
 			logger.info("Imyvm Announce Lite has been initialized.")
 		}
 		ServerLifecycleEvents.SERVER_STOPPED.register {
