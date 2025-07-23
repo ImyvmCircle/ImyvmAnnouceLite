@@ -6,7 +6,7 @@ fi
 
 COMMIT_MSG=$1
 VERSION_TAG=$2
-VERSION_NO_PREFIX=${VERSION_TAG#v}  # 去掉前缀 v
+VERSION_NO_PREFIX=${VERSION_TAG#v}
 
 MOD_VERSION=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2 | tr -d '\r')
 

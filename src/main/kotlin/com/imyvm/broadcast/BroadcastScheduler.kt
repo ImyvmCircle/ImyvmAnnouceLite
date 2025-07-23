@@ -11,14 +11,22 @@ object BroadcastScheduler {
     private var executor: ScheduledExecutorService? = null
     private var intervalSeconds = 30L
     private lateinit var server: MinecraftServer
-    fun start(server: MinecraftServer,
-              inteval: Long = intervalSeconds) {
+    private var motdList: List<String> = emptyList()
+    private var currentIndex = 0
+
+    fun start(
+        server: MinecraftServer,
+        interval: Long = intervalSeconds,
+        motdList: List<String> = BroadcastConfig.MOTD_LIST.value
+    ) {
         this.server = server
-        this.intervalSeconds = inteval
+        this.intervalSeconds = interval
+        this.motdList = motdList
+        this.currentIndex = 0
 
         executor = Executors.newSingleThreadScheduledExecutor()
         executor!!.scheduleAtFixedRate(
-            {broadcastMessage("喵")},
+            { broadcastNextMessage() },
             intervalSeconds,
             intervalSeconds,
             TimeUnit.SECONDS
@@ -30,8 +38,13 @@ object BroadcastScheduler {
         executor = null
     }
 
-    private fun broadcastMessage(s: String) {
-        val message = Text.literal(s).formatted(Formatting.DARK_GREEN)
+    private fun broadcastNextMessage() {
+        if (motdList.isEmpty()) return
+
+        val messageText = motdList[currentIndex]
+        currentIndex = (currentIndex + 1) % motdList.size
+
+        val message = Text.literal(messageText).formatted(Formatting.DARK_GREEN)
         server.playerManager.broadcast(message, false)
     }
 }

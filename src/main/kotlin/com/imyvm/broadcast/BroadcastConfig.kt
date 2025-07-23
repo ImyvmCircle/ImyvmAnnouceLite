@@ -10,12 +10,23 @@ class BroadcastConfig : HokiConfig("imyvm-annouce.conf") {
         @JvmField
         @ConfigOption
         val INTERVAL_SECONDS = Option(
-            "core.broadcast.interval_seconds",
+            "core.imyvm-annouce.interval_seconds",
             30L,
             "The interval in seconds between each broadcast message."
         ) { obj: Config, path: String? ->
             obj.getLong(path)
         }
 
+        @JvmField
+        @ConfigOption
+        val MOTD_LIST = Option(
+            "core.imyvm-annouce.motd_list",
+            listOf("喵",
+                "喵喵",
+                "喵喵喵"),
+            "The list of messages to broadcast."
+        ) { obj: Config, path: String? ->
+            obj.getStringList(path)
+        }
     }
 }
