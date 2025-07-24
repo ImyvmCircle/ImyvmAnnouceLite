@@ -1,8 +1,7 @@
 package com.imyvm.broadcast
 
+import com.imyvm.util.TextParser
 import net.minecraft.server.MinecraftServer
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -44,7 +43,7 @@ object BroadcastScheduler {
         val messageText = motdList[currentIndex]
         currentIndex = (currentIndex + 1) % motdList.size
 
-        val message = Text.literal(messageText).formatted(Formatting.DARK_GREEN)
+        val message = TextParser.parseWithPrefix(messageText)
         server.playerManager.broadcast(message, false)
     }
 }

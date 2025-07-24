@@ -21,9 +21,12 @@ class BroadcastConfig : HokiConfig("imyvm-annouce.conf") {
         @ConfigOption
         val MOTD_LIST = Option(
             "core.imyvm-annouce.motd_list",
-            listOf("喵",
-                "喵喵",
-                "喵喵喵"),
+            listOf(
+                "<green>绿色文本 <red>红色文本 <blue>蓝色文本</blue> 红色结束</red> 绿色结束</green>",
+                "普通文本行喵喵",
+                "<yellow><italic>黄色斜体文本</italic> 之后是正常黄色</yellow>",
+                "<blue>第一行蓝色</blue>\n<gold><bold>第二行金色加粗</bold></gold>\n第三行默认",
+        ),
             "The list of messages to broadcast."
         ) { obj: Config, path: String? ->
             obj.getStringList(path)
