@@ -1,11 +1,11 @@
-package com.imyvm.broadcast
+package com.imyvm
 
 import com.imyvm.hoki.config.ConfigOption
 import com.imyvm.hoki.config.HokiConfig
 import com.imyvm.hoki.config.Option
 import com.typesafe.config.Config
 
-class BroadcastConfig : HokiConfig("imyvm-annouce.conf") {
+class ImyvmAnnouceLiteConfig : HokiConfig("imyvm-annouce.conf") {
     companion object {
         @JvmField
         @ConfigOption

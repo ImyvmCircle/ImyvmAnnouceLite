@@ -1,4 +1,4 @@
-package com.imyvm.broadcast
+package com.imyvm
 
 import com.imyvm.util.TextParser
 import net.minecraft.server.MinecraftServer
@@ -16,12 +16,12 @@ object BroadcastScheduler {
     fun start(
         server: MinecraftServer,
         interval: Long = intervalSeconds,
-        motdList: List<String> = BroadcastConfig.MOTD_LIST.value
+        motdList: List<String> = ImyvmAnnouceLiteConfig.MOTD_LIST.value
     ) {
-        this.server = server
-        this.intervalSeconds = interval
-        this.motdList = motdList
-        this.currentIndex = 0
+        BroadcastScheduler.server = server
+        intervalSeconds = interval
+        BroadcastScheduler.motdList = motdList
+        currentIndex = 0
 
         executor = Executors.newSingleThreadScheduledExecutor()
         executor!!.scheduleAtFixedRate(
