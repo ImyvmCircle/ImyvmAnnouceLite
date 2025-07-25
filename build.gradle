@@ -60,9 +60,6 @@ dependencies {
 
 	// External dependencies.
 	implementation("com.typesafe:config:${project.typesafe_version}")
-	implementation("net.kyori:adventure-text-minimessage:${project.kyori_adventure_version}")
-	implementation("net.kyori:adventure-text-serializer-gson:${project.kyori_adventure_version}")
-	implementation("net.kyori:adventure-text-serializer-legacy:${project.kyori_adventure_version}")
 
 	// ImyvmCircle Projects.
 	modImplementation("com.imyvm:imyvm-hoki:${project.imyvm_hoki_version}")

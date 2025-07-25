@@ -4,11 +4,8 @@ import net.minecraft.text.Text
 import net.minecraft.text.Style
 import net.minecraft.text.TextColor
 import net.minecraft.util.Formatting
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 
 object TextParser {
-    private val miniMessage = MiniMessage.miniMessage()
 
     fun parseWithPrefix(raw: String): Text {
         val prefix = Text.literal("【公告】 ").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFFD700))) // 金色
@@ -21,7 +18,6 @@ object TextParser {
 
         for ((index, line) in lines.withIndex()) {
             val parsedLine = when {
-                line.contains('<') && line.contains('>') -> parseMiniMessage(line)
                 line.contains('&') -> parseAmpersandColors(line)
                 line.contains('§') -> parseSectionColors(line)
                 else -> Text.literal(line)
@@ -44,23 +40,9 @@ object TextParser {
 
     fun preview(raw: String): String {
         return when {
-            raw.contains('<') && raw.contains('>') -> {
-                try {
-                    val component = miniMessage.deserialize(raw)
-                    LegacyComponentSerializer.legacySection().serialize(component)
-                } catch (e: Exception) {
-                    "[格式错误] $raw"
-                }
-            }
             raw.contains('&') -> raw.replace("&([0-9a-fk-or])".toRegex(RegexOption.IGNORE_CASE), "§$1")
             else -> raw
         }
-    }
-
-    private fun parseMiniMessage(raw: String): Text {
-        val component = miniMessage.deserialize(raw)
-        val legacy = LegacyComponentSerializer.legacySection().serialize(component)
-        return parseSectionColors(legacy)
     }
 
     private fun parseAmpersandColors(raw: String): Text {
