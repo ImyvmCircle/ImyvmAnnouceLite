@@ -5,13 +5,12 @@ import net.minecraft.text.Text
 
 object MsgCommandResponds {
     private val messages: Map<String, String> = mapOf(
-        "motd.empty" to "§7[MOTD] 当前没有公告。",
-        "motd.invalid_format" to "§c输入格式不正确，无法解析。",
+        "motd.empty" to "§7当前没有公告。",
         "motd.invalid_index" to "§c无效编号，请输入有效索引。",
         "motd.update_failed" to "§c配置更新失败。",
         "motd.added" to "§a已添加公告，编号为 {index}。",
         "motd.removed" to "§a已移除第 {index} 条公告。",
-        "motd.updated" to "§a已更新第 {index} 条公告。"
+        "motd.reloaded" to "§a公告配置已重新加载。",
     )
 
     fun sendInfo(source: ServerCommandSource, key: String, placeholders: Map<String, String> = emptyMap()) {

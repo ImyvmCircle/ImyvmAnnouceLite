@@ -1,35 +1,53 @@
 package com.imyvm.commands
 
-import com.imyvm.util.ImyvmAnnouceLiteConfigHandler
+import com.imyvm.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
+import com.imyvm.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
+import com.imyvm.ImyvmAnnounceLite
+import com.imyvm.ImyvmAnnounceLite.Companion.CONFIG
+import com.imyvm.ImyvmAnnounceLite.Companion.logger
 import com.imyvm.util.TextParser
 import com.imyvm.util.MsgCommandResponds
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandRegistryAccess
-import net.minecraft.server.command.CommandManager
+import net.minecraft.server.command.CommandManager.*
 import net.minecraft.server.command.ServerCommandSource
 
 fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess: CommandRegistryAccess) {
     dispatcher.register(
-        CommandManager.literal("motd")
-            .then(CommandManager.literal("list")
-                .executes { ctx -> listMotds(ctx) })
-            .then(CommandManager.literal("add")
-                .then(CommandManager.argument("message", StringArgumentType.greedyString())
-                    .executes { ctx -> addMotd(ctx) }))
-            .then(CommandManager.literal("remove")
-                .then(CommandManager.argument("index", StringArgumentType.word())
-                    .executes { ctx -> removeMotd(ctx) }))
-            .then(CommandManager.literal("edit")
-                .then(CommandManager.argument("index", StringArgumentType.word())
-                    .then(CommandManager.argument("message", StringArgumentType.greedyString())
-                        .executes { ctx -> editMotd(ctx) })))
+        literal("imyvm-motd")
+            .then(
+                literal("list")
+                    .executes { listMotds(it) }
+            )
+            .then(
+                literal("add")
+                    .requires { it.hasPermissionLevel(2) }
+                    .then(
+                        argument("message", StringArgumentType.greedyString())
+                            .executes { addMotd(it) }
+                    )
+            )
+            .then(
+                literal("remove")
+                    .requires { it.hasPermissionLevel(2) }
+                    .then(
+                        argument("index", StringArgumentType.word())
+                            .executes { removeMotd(it) }
+                    )
+            )
+            .then(
+                literal("reload")
+                    .requires { it.hasPermissionLevel(2) }
+                    .executes { reloadMotd(it) }
+            )
     )
 }
 
+
 private fun listMotds(ctx: CommandContext<ServerCommandSource>): Int {
-    val motds = ImyvmAnnouceLiteConfigHandler.getMotdList()
+    val motds = MOTD_LIST.value
     if (motds.isEmpty()) {
         MsgCommandResponds.sendInfo(ctx.source, "motd.empty")
     } else {
@@ -43,66 +61,56 @@ private fun listMotds(ctx: CommandContext<ServerCommandSource>): Int {
 
 private fun addMotd(ctx: CommandContext<ServerCommandSource>): Int {
     val newMsg = StringArgumentType.getString(ctx, "message")
-    if (!TextParser.validate(newMsg)) {
-        MsgCommandResponds.sendError(ctx.source, "motd.invalid_format")
-        return 0
+
+    return updateMotd(ctx) { list ->
+        list.add(newMsg)
+        MsgCommandResponds.sendSuccess(ctx.source, "motd.added", mapOf("index" to list.lastIndex.toString()))
+        true
     }
-
-    val list = ImyvmAnnouceLiteConfigHandler.getMotdList().toMutableList()
-    list.add(newMsg)
-
-    if (!ImyvmAnnouceLiteConfigHandler.updateMotdList(list)) {
-        MsgCommandResponds.sendError(ctx.source, "motd.update_failed")
-        return 0
-    }
-
-    MsgCommandResponds.sendSuccess(ctx.source, "motd.added", mapOf("index" to list.lastIndex.toString()))
-    return 1
 }
 
 private fun removeMotd(ctx: CommandContext<ServerCommandSource>): Int {
     val indexStr = StringArgumentType.getString(ctx, "index")
     val index = indexStr.toIntOrNull()
-    val list = ImyvmAnnouceLiteConfigHandler.getMotdList().toMutableList()
 
-    if (index == null || index !in list.indices) {
-        MsgCommandResponds.sendError(ctx.source, "motd.invalid_index")
-        return 0
+    return updateMotd(ctx) { list ->
+        if (index == null || index !in list.indices) {
+            MsgCommandResponds.sendError(ctx.source, "motd.invalid_index")
+            return@updateMotd false
+        }
+        list.removeAt(index)
+        MsgCommandResponds.sendSuccess(ctx.source, "motd.removed", mapOf("index" to index.toString()))
+        true
     }
+}
 
-    list.removeAt(index)
-    if (!ImyvmAnnouceLiteConfigHandler.updateMotdList(list)) {
-        MsgCommandResponds.sendError(ctx.source, "motd.update_failed")
-        return 0
-    }
-
-    MsgCommandResponds.sendSuccess(ctx.source, "motd.removed", mapOf("index" to index.toString()))
+private fun reloadMotd(ctx: CommandContext<ServerCommandSource>): Int {
+    CONFIG.loadAndSave()
+    ImyvmAnnounceLite.broadcastScheduler.restart(
+        ctx.source.server,
+        INTERVAL_SECONDS.value,
+        MOTD_LIST.value
+    )
+    MsgCommandResponds.sendInfo(ctx.source, "motd.reloaded")
     return 1
 }
 
-private fun editMotd(ctx: CommandContext<ServerCommandSource>): Int {
-    val indexStr = StringArgumentType.getString(ctx, "index")
-    val index = indexStr.toIntOrNull()
-    val newMsg = StringArgumentType.getString(ctx, "message")
+private inline fun updateMotd(ctx: CommandContext<ServerCommandSource>, modifier: (MutableList<String>) -> Boolean): Int {
+    val list = MOTD_LIST.value.toMutableList()
+    val changed = modifier(list)
+    if (changed) {
+        MOTD_LIST.setValue(list)
+        CONFIG.save()
+        logger.info("MOTD updated: $list")
 
-    if (!TextParser.validate(newMsg)) {
-        MsgCommandResponds.sendError(ctx.source, "motd.invalid_format")
-        return 0
+        ImyvmAnnounceLite.broadcastScheduler.restart(
+            ctx.source.server,
+            INTERVAL_SECONDS.value,
+            list
+        )
+        logger.info("BroadcastScheduler restarted after MOTD update.")
+
+        return 1
     }
-
-    val list = ImyvmAnnouceLiteConfigHandler.getMotdList().toMutableList()
-    if (index == null || index !in list.indices) {
-        MsgCommandResponds.sendError(ctx.source, "motd.invalid_index")
-        return 0
-    }
-
-    list[index] = newMsg
-    if (!ImyvmAnnouceLiteConfigHandler.updateMotdList(list)) {
-        MsgCommandResponds.sendError(ctx.source, "motd.update_failed")
-        return 0
-    }
-
-    MsgCommandResponds.sendSuccess(ctx.source, "motd.updated", mapOf("index" to index.toString()))
-    return 1
+    return 0
 }
-

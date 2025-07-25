@@ -1,28 +1,45 @@
 package com.imyvm
 
+import com.imyvm.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
+import com.imyvm.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
 import com.imyvm.commands.register
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object ImyvmAnnounceLite : ModInitializer {
-    private val logger = LoggerFactory.getLogger("imyvm-announce-lite")
-
+class ImyvmAnnounceLite : ModInitializer {
 	override fun onInitialize() {
-		CommandRegistrationCallback.EVENT.register { dispatcher, commandRegistryAccess, _ ->
-			register(dispatcher, commandRegistryAccess)
+		CONFIG.loadAndSave()
+
+		CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, _ ->
+			register(dispatcher, registryAccess)
 		}
+
 		ServerLifecycleEvents.SERVER_STARTED.register { server ->
-			BroadcastScheduler.start(server,
-				ImyvmAnnouceLiteConfig.INTERVAL_SECONDS.value,
-				ImyvmAnnouceLiteConfig.MOTD_LIST.value)
+			broadcastScheduler.start(
+				server,
+				INTERVAL_SECONDS.value,
+				MOTD_LIST.value,
+			)
 			logger.info("Imyvm Announce Lite has been initialized.")
 		}
+
 		ServerLifecycleEvents.SERVER_STOPPED.register {
-			BroadcastScheduler.stop()
+			broadcastScheduler.stop()
 			logger.info("Imyvm Announce Lite is shutting down.")
 		}
+
 		logger.info("Hello Fabric world!")
+	}
+
+	companion object {
+		const val MOD_ID = "imyvm_announce_lite"
+		@JvmField
+		val logger: Logger = LoggerFactory.getLogger(MOD_ID)
+		val CONFIG: ImyvmAnnouceLiteConfig = ImyvmAnnouceLiteConfig()
+
+		val broadcastScheduler = BroadcastScheduler()
 	}
 }

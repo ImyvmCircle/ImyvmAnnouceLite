@@ -6,30 +6,26 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-object BroadcastScheduler {
+class BroadcastScheduler {
     private var executor: ScheduledExecutorService? = null
     private var intervalSeconds = 30L
-    private lateinit var server: MinecraftServer
+    private var server: MinecraftServer? = null
     private var motdList: List<String> = emptyList()
     private var currentIndex = 0
 
-    fun start(
-        server: MinecraftServer,
-        interval: Long = intervalSeconds,
-        motdList: List<String> = ImyvmAnnouceLiteConfig.MOTD_LIST.value
-    ) {
-        BroadcastScheduler.server = server
-        intervalSeconds = interval
-        BroadcastScheduler.motdList = motdList
+    fun start(server: MinecraftServer, interval: Long, motdList: List<String>) {
+        stop()
+        this.server = server
+        this.intervalSeconds = interval
+        this.motdList = motdList
         currentIndex = 0
 
+        if (motdList.isEmpty()) return
+
         executor = Executors.newSingleThreadScheduledExecutor()
-        executor!!.scheduleAtFixedRate(
-            { broadcastNextMessage() },
-            intervalSeconds,
-            intervalSeconds,
-            TimeUnit.SECONDS
-        )
+        executor!!.scheduleAtFixedRate({
+            broadcastNextMessage()
+        }, intervalSeconds, intervalSeconds, TimeUnit.SECONDS)
     }
 
     fun stop() {
@@ -37,13 +33,19 @@ object BroadcastScheduler {
         executor = null
     }
 
+    fun restart(server: MinecraftServer, interval: Long, motdList: List<String>) {
+        start(server, interval, motdList)
+    }
+
     private fun broadcastNextMessage() {
+        val s = server ?: return
         if (motdList.isEmpty()) return
 
         val messageText = motdList[currentIndex]
         currentIndex = (currentIndex + 1) % motdList.size
 
         val message = TextParser.parseWithPrefix(messageText)
-        server.playerManager.broadcast(message, false)
+        s.playerManager.broadcast(message, false)
     }
 }
+
