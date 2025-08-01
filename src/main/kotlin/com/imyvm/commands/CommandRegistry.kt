@@ -57,6 +57,13 @@ fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess:
                         1
                     }
             )
+            .then(
+                literal("help")
+                    .executes { ctx ->
+                        MsgCommandResponds.sendInfo(ctx.source, "motd.help")
+                        1
+                    }
+            )
     )
 }
 
