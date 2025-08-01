@@ -50,6 +50,13 @@ fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess:
                             .executes { setTimeInterval(it) }
                 )
             )
+            .then(
+                literal("timequery")
+                    .executes { ctx ->
+                        MsgCommandResponds.sendInfo(ctx.source, "motd.interval_query", mapOf("interval" to INTERVAL_SECONDS.value.toString()))
+                        1
+                    }
+            )
     )
 }
 
