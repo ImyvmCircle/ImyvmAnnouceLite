@@ -21,6 +21,7 @@
 | `/imyvm-motd reload`      | OP        | 重新加载配置文件中的 MOTD 列表 |
 | `/imyvm-motd timeset <interval>` | OP | 重新设置公告发送间隔 |
 | `/imyvm-motd timequery` | 任意用户 | 查询当前公告发送间隔 |
+| `/imyvm-motd help` | 任意用户 | 指令列表 |
 
 ## 配置项（config/imyvm-annouce.conf）
 
