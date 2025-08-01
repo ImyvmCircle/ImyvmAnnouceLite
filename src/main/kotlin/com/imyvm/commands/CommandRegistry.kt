@@ -42,6 +42,14 @@ fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess:
                     .requires { it.hasPermissionLevel(2) }
                     .executes { reloadMotd(it) }
             )
+            .then(
+                literal("timeset")
+                    .requires{ it.hasPermissionLevel(2) }
+                    .then(
+                        argument("interval", StringArgumentType.word())
+                            .executes { setTimeInterval(it) }
+                )
+            )
     )
 }
 
@@ -113,4 +121,24 @@ private inline fun updateMotd(ctx: CommandContext<ServerCommandSource>, modifier
         return 1
     }
     return 0
+}
+
+private fun setTimeInterval(ctx: CommandContext<ServerCommandSource>): Int {
+    val newInterval = StringArgumentType.getString(ctx, "interval").toLongOrNull()
+    if (newInterval == null || newInterval <= 0) {
+        MsgCommandResponds.sendError(ctx.source, "motd.invalid_interval")
+        return 0
+    }
+
+    INTERVAL_SECONDS.setValue(newInterval)
+    CONFIG.save()
+    logger.info("Motd time interval set to $newInterval seconds.")
+
+    ImyvmAnnounceLite.broadcastScheduler.restart(
+        ctx.source.server,
+        INTERVAL_SECONDS.value,
+        MOTD_LIST.value
+    )
+    MsgCommandResponds.sendSuccess(ctx.source, "motd.interval_set", mapOf("interval" to newInterval.toString()))
+    return 1
 }

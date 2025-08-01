@@ -11,6 +11,8 @@ object MsgCommandResponds {
         "motd.added" to "§a已添加公告，编号为 {index}。",
         "motd.removed" to "§a已移除第 {index} 条公告。",
         "motd.reloaded" to "§a公告配置已重新加载。",
+        "motd.interval_invalid" to "§c无效的公告间隔，请输入一个合法的正整数。",
+        "motd.interval_set" to "§a公告间隔已设置为 {interval} 秒。",
     )
 
     fun sendInfo(source: ServerCommandSource, key: String, placeholders: Map<String, String> = emptyMap()) {
