@@ -30,8 +30,6 @@ class ImyvmAnnounceLite : ModInitializer {
 			broadcastScheduler.stop()
 			logger.info("Imyvm Announce Lite is shutting down.")
 		}
-
-		logger.info("Hello Fabric world!")
 	}
 
 	companion object {
