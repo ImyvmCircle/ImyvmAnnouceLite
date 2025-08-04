@@ -14,12 +14,13 @@ object MsgCommandResponds {
         "motd.interval_query" to "§7当前公告间隔为 {interval} 秒。",
         "motd.interval_invalid" to "§c无效的公告间隔，请输入一个合法的正整数。",
         "motd.interval_set" to "§a公告间隔已设置为 {interval} 秒。",
-        "motd.help" to "§7/imymv-motd list - 查看当前公告列表\n" +
-                "§7/imymv-motd add <message> - 添加新的公告\n" +
-                "§7/imymv-motd remove <index> - 移除指定编号的公告\n" +
-                "§7/imymv-motd reload - 重新加载公告配置\n" +
-                "§7/imymv-motd timeset <interval> - 设置公告间隔时间（秒）\n" +
-                "§7/imymv-motd timequery - 查询当前公告间隔时间"
+        "motd.help" to "§7/imyvm-motd list - 查看当前公告列表\n" +
+                "§7/imyvm-motd add <message> - 添加新的公告\n" +
+                "§7/imyvm-motd remove <index> - 移除指定编号的公告\n" +
+                "§7/imyvm-motd reload - 重新加载公告配置\n" +
+                "§7/imyvm-motd timeset <interval> - 设置公告间隔时间（秒）\n" +
+                "§7/imyvm-motd timequery - 查询当前公告间隔时间" +
+                "§7/imyvm-motd help - 显示帮助信息"
     )
 
     fun sendInfo(source: ServerCommandSource, key: String, placeholders: Map<String, String> = emptyMap()) {
