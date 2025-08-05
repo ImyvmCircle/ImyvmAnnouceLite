@@ -64,6 +64,12 @@ fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess:
                         1
                     }
             )
+            .then(
+                literal("reset")
+                    .executes( { ctx ->
+                        resetConfig(ctx)
+                    })
+            )
     )
 }
 
@@ -154,5 +160,21 @@ private fun setTimeInterval(ctx: CommandContext<ServerCommandSource>): Int {
         MOTD_LIST.value
     )
     MsgCommandResponds.sendSuccess(ctx.source, "motd.interval_set", mapOf("interval" to newInterval.toString()))
+    return 1
+}
+
+private fun resetConfig(ctx: CommandContext<ServerCommandSource>): Int {
+    MOTD_LIST.setValue(listOf(
+        "&a服务器娘喵了一下～",
+        "&c请遵守服务器规则，祝您游戏愉快！"
+    ))
+    INTERVAL_SECONDS.setValue(600)
+    CONFIG.save()
+    ImyvmAnnounceLite.broadcastScheduler.restart(
+        ctx.source.server,
+        INTERVAL_SECONDS.value,
+        MOTD_LIST.value
+    )
+    MsgCommandResponds.sendSuccess(ctx.source, "motd.reset")
     return 1
 }

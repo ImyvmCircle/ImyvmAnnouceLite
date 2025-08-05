@@ -19,8 +19,10 @@ object MsgCommandResponds {
                 "§7/imyvm-motd remove <index> - 移除指定编号的公告\n" +
                 "§7/imyvm-motd reload - 重新加载公告配置\n" +
                 "§7/imyvm-motd timeset <interval> - 设置公告间隔时间（秒）\n" +
-                "§7/imyvm-motd timequery - 查询当前公告间隔时间" +
-                "§7/imyvm-motd help - 显示帮助信息"
+                "§7/imyvm-motd timequery - 查询当前公告间隔时间\n" +
+                "§7/imyvm-motd help - 显示帮助信息\n" +
+                "§7/imyvm-motd reset - 重置mod配置",
+        "motd.reset" to "§a公告已重置为默认配置。"
     )
 
     fun sendInfo(source: ServerCommandSource, key: String, placeholders: Map<String, String> = emptyMap()) {
