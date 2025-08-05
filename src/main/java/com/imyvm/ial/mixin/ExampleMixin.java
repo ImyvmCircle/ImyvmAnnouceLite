@@ -1,4 +1,4 @@
-package com.imyvm.mixin;
+package com.imyvm.ial.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

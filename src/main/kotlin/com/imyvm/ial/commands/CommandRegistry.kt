@@ -1,12 +1,12 @@
-package com.imyvm.commands
+package com.imyvm.ial.commands
 
-import com.imyvm.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
-import com.imyvm.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
-import com.imyvm.ImyvmAnnounceLite
-import com.imyvm.ImyvmAnnounceLite.Companion.CONFIG
-import com.imyvm.ImyvmAnnounceLite.Companion.logger
-import com.imyvm.util.TextParser
-import com.imyvm.util.MsgCommandResponds
+import com.imyvm.ial.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
+import com.imyvm.ial.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
+import com.imyvm.ial.ImyvmAnnounceLite
+import com.imyvm.ial.ImyvmAnnounceLite.Companion.CONFIG
+import com.imyvm.ial.ImyvmAnnounceLite.Companion.logger
+import com.imyvm.ial.util.TextParser
+import com.imyvm.ial.util.MsgCommandResponds
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext

@@ -1,8 +1,8 @@
-package com.imyvm
+package com.imyvm.ial
 
-import com.imyvm.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
-import com.imyvm.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
-import com.imyvm.commands.register
+import com.imyvm.ial.ImyvmAnnouceLiteConfig.Companion.INTERVAL_SECONDS
+import com.imyvm.ial.ImyvmAnnouceLiteConfig.Companion.MOTD_LIST
+import com.imyvm.ial.commands.register
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents

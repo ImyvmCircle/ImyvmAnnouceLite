@@ -1,4 +1,4 @@
-package com.imyvm
+package com.imyvm.ial
 
 import com.imyvm.hoki.config.ConfigOption
 import com.imyvm.hoki.config.HokiConfig

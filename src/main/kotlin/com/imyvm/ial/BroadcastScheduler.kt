@@ -1,6 +1,6 @@
-package com.imyvm
+package com.imyvm.ial
 
-import com.imyvm.util.TextParser
+import com.imyvm.ial.util.TextParser
 import net.minecraft.server.MinecraftServer
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService

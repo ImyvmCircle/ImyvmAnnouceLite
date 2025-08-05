@@ -1,4 +1,4 @@
-package com.imyvm.util
+package com.imyvm.ial.util
 
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text

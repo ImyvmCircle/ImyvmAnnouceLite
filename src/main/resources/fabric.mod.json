@@ -3,9 +3,9 @@
 	"id": "imyvm-announce-lite",
 	"version": "${version}",
 	"name": "ImyvmAnnounceLite",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A lite mod to send motd-formatted announcement for imyvm-server.",
 	"authors": [
-		"Me!"
+		"Doohaey Re"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -17,13 +17,13 @@
 	"entrypoints": {
 		"main": [
 			{
-				"value": "com.imyvm.ImyvmAnnounceLite",
+				"value": "com.imyvm.ial.ImyvmAnnounceLite",
 				"adapter": "kotlin"
 			}
 		],
 		"client": [
 			{
-				"value": "com.imyvm.ImyvmAnnounceLiteClient",
+				"value": "com.imyvm.ial.ImyvmAnnounceLiteClient",
 				"adapter": "kotlin"
 			}
 		]
