@@ -13,15 +13,16 @@
 
 ## 指令列表
 
-| 指令                      | 权限要求 | 说明                           |
-|---------------------------|-----------|--------------------------------|
-| `/imyvm-motd list`        | 任意用户  | 查看所有 MOTD 消息              |
-| `/imyvm-motd add <msg>`   | OP        | 添加一条新的广播消息           |
+| 指令                     | 权限要求 | 说明                           |
+|--------------------------|-----------|--------------------------------|
+| `/imyvm-motd list`       | 任意用户  | 查看所有 MOTD 消息              |
+| `/imyvm-motd add <msg>`  | OP        | 添加一条新的广播消息           |
 | `/imyvm-motd remove <id>` | OP        | 移除指定索引的广播消息         |
-| `/imyvm-motd reload`      | OP        | 重新加载配置文件中的 MOTD 列表 |
+| `/imyvm-motd reload`     | OP        | 重新加载配置文件中的 MOTD 列表 |
 | `/imyvm-motd timeset <interval>` | OP | 重新设置公告发送间隔 |
 | `/imyvm-motd timequery` | 任意用户 | 查询当前公告发送间隔 |
 | `/imyvm-motd help` | 任意用户 | 指令列表 |
+| `/imyvm-motd reset` | OP | 重置 MOTD 列表到默认配置 |
 
 ## 配置项（config/imyvm-annouce.conf）
 

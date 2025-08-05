@@ -66,6 +66,7 @@ fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess:
             )
             .then(
                 literal("reset")
+                    .requires( { it.hasPermissionLevel(2) })
                     .executes( { ctx ->
                         resetConfig(ctx)
                     })
