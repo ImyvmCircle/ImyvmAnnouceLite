@@ -11,7 +11,7 @@ class ImyvmAnnouceLiteConfig : HokiConfig("imyvm-annouce.conf") {
         @ConfigOption
         val INTERVAL_SECONDS = Option(
             "core.imyvm-annouce.interval_seconds",
-            600L,
+            300L,
             "The interval in seconds between each broadcast message."
         ) { obj: Config, path: String? ->
             obj.getLong(path)
